@@ -37,20 +37,23 @@ export default function OrderForm() {
   const customers = useAppSelector((state) => state.order.customers)
   const buyers = useAppSelector((state) => state.order.buyers)
   const orderFormInput = useAppSelector((state) => state.order.orderFormInput)
-  const [customer, setActiveCustomer] = useState(null);
-  const [customerLocations, setCustomerLocations] = useState<object[]>([]);
+  const [activeLocation, setActiveLocation] = useState('');
+  const [customerLocations, setCustomerLocations] = useState<string[]>([]);
   const [reqDate, setreqDate] = useState(new Date());
 
   useEffect(() => {
     if (orderId > 0) {
       fetchApiData.order(orderId).then(data => {
         data.data.attachment = null
+        setCustomerId(data.data.customer)
+        setActiveLocation(data.data.customer_address)
         dispatch(orderActions.setOrderForm(data.data))
       })
     } else {
       dispatch(orderActions.setOrderForm(defaultOrderInput))
     }
   }, [orderId])
+
 
 
   const form: UseFormReturn<OrderDTO, UseFormProps> = useForm<OrderDTO>({
@@ -73,11 +76,12 @@ export default function OrderForm() {
     let customerObj: any = customers.filter((obj: any) => {
       return obj.id === customerId;
     });
-
     customerObj = customerObj[0] ?? null;
 
     if (customerObj && customerObj.locations) {
       setCustomerLocations(customerObj.locations);
+    } else {
+      setCustomerLocations([]);
     }
   }
 
@@ -160,7 +164,8 @@ export default function OrderForm() {
                         control={form.control}
                         render={({ field: { onChange, ...rest } }) => (
                           <FormControl fullWidth>
-                            <Select error={!!form.formState.errors['customer']}
+                            <Select
+                              error={!!form.formState.errors['customer']}
                               {...rest}
                               onChange={(e) => {
                                 // code
@@ -206,7 +211,7 @@ export default function OrderForm() {
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                               {...rest}
-                              sx={{ width: 450 }}
+                              sx={{ width: 550 }}
                               label="Delivery Date"
                               disablePast
                               value={dayjs(value)}
@@ -222,7 +227,7 @@ export default function OrderForm() {
                             {...field}
                             type="time"
                             label="Delivery Time"
-                            sx={{ width: 400 }}
+                            sx={{ width: 550 }}
                             InputLabelProps={{
                               shrink: true,
                             }}
@@ -272,7 +277,7 @@ export default function OrderForm() {
                           <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                               {...rest}
-                              sx={{ width: 450 }}
+                              sx={{ width: 550 }}
                               label="Order Date"
                               disablePast
                               value={dayjs(value)}
@@ -280,6 +285,7 @@ export default function OrderForm() {
                           </LocalizationProvider>
                         )}
                       />
+
                       <Controller
                         name="attachment"
                         control={form.control}
@@ -294,7 +300,6 @@ export default function OrderForm() {
                               type="file"
                               label="Attachment"
                               error={!!form.formState.errors['attachment']}
-                              sx={{ width: 450 }}
                               InputLabelProps={{
                                 shrink: true,
                               }}
@@ -310,7 +315,7 @@ export default function OrderForm() {
                         gap: 1, my: 2,
                       }}
                     >
-                      <CustomerLocation locations={customerLocations} />
+                      <CustomerLocation activeLocation={activeLocation} locations={customerLocations} customer={customerId} />
 
                     </Box>
 
@@ -336,7 +341,6 @@ export default function OrderForm() {
                         <ButtonGroup variant="outlined" aria-label="button group">
                           <Button color="success" type='submit'>Save</Button>
                           <Button color="warning" onClick={() => form.reset(orderFormInput)}>Reset</Button>
-                          <Button variant="outlined" color="error">Refresh</Button>
                         </ButtonGroup>
                       </Box>
                     </Box>

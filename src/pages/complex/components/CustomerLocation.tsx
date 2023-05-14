@@ -7,11 +7,13 @@ import { Controller, SubmitHandler, FormProvider, useForm, UseFormProps, UseForm
 import { OrderDTO } from '../default/orderData';
 
 type PropTypes = {
-  locations: object[];
+  activeLocation: string;
+  locations: string[];
+  customer: number;
 }
 
 export function CustomerLocation(props: PropTypes) {
-  const { locations } = props;
+  const { activeLocation, locations, customer } = props;
   const form = useFormContext<OrderDTO>();
 
   const [open, setOpen] = React.useState(false);
@@ -22,8 +24,10 @@ export function CustomerLocation(props: PropTypes) {
       setActiveButton(true)
     } else {
       setActiveButton(false)
+      if (customer != 0) {
+        form.setValue('customer_address', '');
+      }
     }
-    form.setValue('customer_address', '');
   }, [locations]);
 
   const handleClickOpen = () => {
@@ -35,10 +39,13 @@ export function CustomerLocation(props: PropTypes) {
   };
 
   const handleListItemClick = (value: any) => {
-    console.log(value)
     form.setValue('customer_address', value);
     setOpen(false);
   };
+
+  function sanitizeString(value: string) {
+    return value.replace(/\n|\r|\W/g, "")
+  }
 
   return (
     <>
@@ -60,8 +67,11 @@ export function CustomerLocation(props: PropTypes) {
       <Dialog onClose={handleClose} open={open}>
         <DialogTitle>Select Customer Address</DialogTitle>
         <List sx={{ pt: 0 }}>
-          {locations.map((row: any) => (
-            <ListItemButton onClick={() => handleListItemClick(row)} key={row}>
+          {locations.map((row: string) => (
+            <ListItemButton
+              selected={sanitizeString(activeLocation) === sanitizeString(row)}
+              onClick={() => handleListItemClick(row)} key={row}
+            >
               <LocationOnIcon />
               <ListItemText sx={{ mx: 1 }} primary={row} />
             </ListItemButton>

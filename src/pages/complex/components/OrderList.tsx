@@ -2,7 +2,7 @@
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from 'react';
 //material-ui
-import { TableContainer, Paper, Stack, Button, Table, TableBody, TableCell, TableHead, TableRow, Pagination, Select, MenuItem } from '@mui/material';
+import { TableContainer, Paper, Stack, Button, Table, TableBody, TableCell, tableCellClasses, TableHead, TableRow, Pagination, Select, MenuItem } from '@mui/material';
 import {
   Dialog,
   DialogActions,
@@ -10,6 +10,8 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
+import ImageIcon from '@mui/icons-material/Image';
+import HideImageIcon from '@mui/icons-material/HideImage';
 import { CustomerDTO, defaultFilterParams, FilterDTO, OrderSummaryDTO } from '@/pages/complex/default/orderData';
 import OrderFilter from '@/pages/complex/components/OrderFilter';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -72,55 +74,68 @@ export default function OrderList(props: any) {
     }
   };
 
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.primary.light,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
+
   return (
     <>
       <TableContainer component={Paper}>
         <Table className="w-full" aria-label="Order Table">
           <TableHead>
             <TableRow>
-              <TableCell>Order Number</TableCell>
-              <TableCell>Customer</TableCell>
-              <TableCell>Buyer</TableCell>
-              <TableCell align="center">Order Date</TableCell>
-              <TableCell align="center">Delivery Date</TableCell>
-              <TableCell align="center">Total Price</TableCell>
-              <TableCell align="center">Attachment</TableCell>
-              <TableCell align="right">Action</TableCell>
+              <StyledTableCell>Order Number</StyledTableCell>
+              <StyledTableCell>Customer</StyledTableCell>
+              <StyledTableCell>Buyer</StyledTableCell>
+              <StyledTableCell align="center">Order Date</StyledTableCell>
+              <StyledTableCell align="center">Delivery Date</StyledTableCell>
+              <StyledTableCell align="center">Total Price</StyledTableCell>
+              <StyledTableCell align="center">Attachment</StyledTableCell>
+              <StyledTableCell align="right">Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {orders &&
               orders.map((order: OrderSummaryDTO) => (
-                <TableRow key={order.id}>
-                  <TableCell component="th" scope="row">
+                <StyledTableRow key={order.id}>
+                  <StyledTableCell component="th" scope="row">
                     {order.order_number}
-                  </TableCell>
-                  <TableCell>{order.customer_name}</TableCell>
-                  <TableCell>{order.buyer_name}</TableCell>
-                  <TableCell align="center">
+                  </StyledTableCell>
+                  <StyledTableCell>{order.customer_name}</StyledTableCell>
+                  <StyledTableCell>{order.buyer_name}</StyledTableCell>
+                  <StyledTableCell align="center">
                     {order.order_date}
-                  </TableCell>
-                  <TableCell align="center">
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
                     {order.delivery_date}
-                  </TableCell>
-                  <TableCell align="center">
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
                     {order.total_amount}
-                  </TableCell>
-                  <TableCell align="center">
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
                     {order.attachment ? (
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        href={order.attachment}
-                        target="_blank"
-                      >
-                        Download
-                      </Button>
+                      <ImageIcon color="primary" onClick={() => window.open(order.attachment)} />
                     ) : (
-                      'n/a'
+                        <HideImageIcon />
                     )}
-                  </TableCell>
-                  <TableCell align="right">
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
                     <Button
                       type="button"
                       size="small"
@@ -141,8 +156,8 @@ export default function OrderList(props: any) {
                     >
                       Delete
                     </Button>
-                  </TableCell>
-                </TableRow>
+                  </StyledTableCell>
+                </StyledTableRow>
               ))}
           </TableBody>
         </Table>
