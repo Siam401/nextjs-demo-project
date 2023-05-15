@@ -13,16 +13,20 @@ import { fetchApiData } from '@/pages/complex/sync/DataLoad';
 
 import { OrderDTO, defaultOrderInput, BuyerDTO, defaultOrderProduct } from '@/pages/complex/default/orderData';
 
-export default function ItemSection() {
+type PropTypes = {
+  getOrder: (orderId: number) => void;
+  orderId: number;
+}
+
+export default function ItemSection({ getOrder, orderId }: PropTypes) {
+
   const form = useFormContext<OrderDTO>();
   const orderProductsField: UseFieldArrayReturn<
     OrderDTO,
-    FieldArrayPath<any>,
-    'orderProductId'
-  > = useFieldArray<OrderDTO, FieldArrayPath<any>, 'orderProductId'>({
+    FieldArrayPath<any>
+  > = useFieldArray<OrderDTO, FieldArrayPath<any>>({
     control: form.control,
     name: 'order_products',
-    keyName: 'orderProductId',
   });
 
   const products = useAppSelector((state) => state.order.products)
@@ -33,15 +37,16 @@ export default function ItemSection() {
     }
     console.log(orderProductsField)
 
-    orderProductsField.remove(index);
 
     let productId = form.getValues(`order_products.${index}.id`);
     console.log(index)
     console.log(productId)
     console.log(orderProductsField)
     if (productId && productId > 0) {
-      fetchApiData.deleteOrderProduct(productId)
+      await fetchApiData.deleteOrderProduct(productId)
+      getOrder(orderId)
     }
+    orderProductsField.remove(index);
   };
 
   const addNewProduct = () => {
@@ -73,9 +78,9 @@ export default function ItemSection() {
               orderProductsField.fields.map((field, index) => {
                 return (
                   <FormOrderProductEntry
+                    key={field.id}
                     product={prepareProductObj(field)}
                     products={products}
-                    key={index}
                     index={index}
                     removeProduct={removeProduct}
                   />

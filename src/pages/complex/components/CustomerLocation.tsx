@@ -24,7 +24,7 @@ export function CustomerLocation(props: PropTypes) {
       setActiveButton(true)
     } else {
       setActiveButton(false)
-      if (customer != 0) {
+      if (customer == 0) {
         form.setValue('customer_address', '');
       }
     }

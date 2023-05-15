@@ -6,8 +6,9 @@ import jsonToFormData from '@ajoelp/json-to-formdata';
 
 //material-ui
 import PropTypes from 'prop-types';
-import { Box, Container, Grid, TextField, Button, ButtonGroup, FormControl, Select, MenuItem, Paper, FormHelperText, Dialog, DialogTitle, ListItem, Typography } from '@mui/material';
-import { MuiFileInput } from 'mui-file-input';
+import { Box, Container, Grid, TextField, Button, ButtonGroup, FormControl, Select, MenuItem, Paper, FormHelperText, Dialog, DialogTitle, Link, Typography } from '@mui/material';
+import ImageIcon from '@mui/icons-material/Image';
+
 //redux
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -33,6 +34,7 @@ export default function OrderForm() {
   const orderId = Number(router.query.orderId)
 
   const [customerId, setCustomerId] = useState(0);
+  const [fileUrl, setFileUrl] = useState(null);
   const [file, setFile] = useState(null);
   const customers = useAppSelector((state) => state.order.customers)
   const buyers = useAppSelector((state) => state.order.buyers)
@@ -43,17 +45,22 @@ export default function OrderForm() {
 
   useEffect(() => {
     if (orderId > 0) {
-      fetchApiData.order(orderId).then(data => {
-        data.data.attachment = null
-        setCustomerId(data.data.customer)
-        setActiveLocation(data.data.customer_address)
-        dispatch(orderActions.setOrderForm(data.data))
-      })
+      getOrder(orderId)
     } else {
       dispatch(orderActions.setOrderForm(defaultOrderInput))
     }
   }, [orderId])
 
+  async function getOrder(orderId: number) {
+    await fetchApiData.order(orderId).then(data => {
+      setCustomerId(data.data.customer)
+      setActiveLocation(data.data.customer_address)
+      setFileUrl(data.data.attachment)
+      data.data.attachment = null
+      dispatch(orderActions.setOrderForm(data.data))
+    })
+    return true
+  }
 
 
   const form: UseFormReturn<OrderDTO, UseFormProps> = useForm<OrderDTO>({
@@ -213,7 +220,7 @@ export default function OrderForm() {
                               {...rest}
                               sx={{ width: 550 }}
                               label="Delivery Date"
-                              disablePast
+                              disablePast={orderId === 0}
                               value={dayjs(value)}
                             />
                           </LocalizationProvider>
@@ -279,7 +286,7 @@ export default function OrderForm() {
                               {...rest}
                               sx={{ width: 550 }}
                               label="Order Date"
-                              disablePast
+                              disablePast={orderId === 0}
                               value={dayjs(value)}
                             />
                           </LocalizationProvider>
@@ -304,6 +311,9 @@ export default function OrderForm() {
                                 shrink: true,
                               }}
                             />
+                            {fileUrl ? (
+                              <ImageIcon color="primary" onClick={() => window.open(fileUrl)} />
+                            ) : null}
                           </FormControl>
                         )}
                       />
@@ -319,7 +329,7 @@ export default function OrderForm() {
 
                     </Box>
 
-                    <ItemSection />
+                    <ItemSection getOrder={getOrder} orderId={orderId} />
 
                     <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}>
                       <Box sx={{ display: 'flex', my: 1, gap: 1, flexDirection: 'row' }}>
