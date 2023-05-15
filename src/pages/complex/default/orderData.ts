@@ -50,7 +50,7 @@ export type OrderSummaryDTO = {
   order_number: string;
   total_amount: number;
   created_by: string;
-  attachment: null | string;
+  attachment: string | URL | undefined;
   id: number;
 };
 

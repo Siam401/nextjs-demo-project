@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app'
 import store from '@/core/redux/store';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import { SessionProvider } from 'next-auth/react';
 
 const darkTheme = createTheme({
   palette: {
@@ -17,7 +18,9 @@ export default function App({ Component, pageProps }: AppProps) {
     <ThemeProvider theme={darkTheme}>
       <Provider store={store}>
         <CssBaseline />
-        <Component {...pageProps} />
+        <SessionProvider session={pageProps.session}>
+          <Component {...pageProps} />
+        </SessionProvider>
       </Provider>
 
     </ThemeProvider>
