@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { styled } from '@mui/material/styles';
+import React from 'react';
 //material-ui
-import { TextField, InputLabel, TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Button, FormHelperText, Select, MenuItem, Paper } from '@mui/material';
+import { TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Button, FormHelperText, Paper } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import axios from 'axios';
-// import { setItems } from '../../../features/complex/itemSlice'
-// import { useDispatch, useSelector } from 'react-redux';
-import { useAppDispatch, useAppSelector } from '@/core/redux/store';
-import { Controller, SubmitHandler, FormProvider, useForm, UseFormProps, useFieldArray, useFormContext, UseFieldArrayReturn, FieldArrayPath } from 'react-hook-form';
+import { useAppSelector } from '@/core/redux/store';
+import { useFieldArray, useFormContext, UseFieldArrayReturn, FieldArrayPath } from 'react-hook-form';
 import FormOrderProductEntry from '@/pages/complex/components/FormItemRow';
 import { fetchApiData } from '@/pages/complex/sync/DataLoad';
 
-import { OrderDTO, defaultOrderInput, BuyerDTO, defaultOrderProduct } from '@/pages/complex/default/orderData';
+import { OrderDTO, defaultOrderProduct } from '@/pages/complex/default/orderData';
 
 type PropTypes = {
   getOrder: (orderId: number) => void;

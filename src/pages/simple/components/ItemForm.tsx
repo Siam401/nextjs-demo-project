@@ -5,7 +5,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import itemDTO, { defaultItemInput } from '../default/itemData';
 import { useAppDispatch, useAppSelector } from '@/core/redux/store';
 import { useEffect, useState } from 'react';
-import { setHead, setItemList, setItemForm, resetFormInput } from '@/features/simple/itemSlice'
+import { setItemList, resetFormInput } from '@/features/simple/itemSlice'
 import Swal from 'sweetalert2'
 
 import {
@@ -36,7 +36,7 @@ const ItemForm = () => {
     handleSubmit,
     reset,
     control,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors },
   } = useForm<itemDTO>({
     defaultValues: defaultItemInput,
     resolver: yupResolver(

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CustomerDTO, BuyerDTO, OrderDTO, FilterDTO } from '@/pages/complex/default/orderData';
+import { FilterDTO } from '@/pages/complex/default/orderData';
 import jsonToFormData from '@ajoelp/json-to-formdata';
 
 export const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;

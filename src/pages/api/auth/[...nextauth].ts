@@ -15,7 +15,7 @@ const authOptions: NextAuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "jsmith@example.com" },
+        email: { label: "Email", type: "text", placeholder: "Enter Email .." },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials, req) {
@@ -41,6 +41,9 @@ const authOptions: NextAuthOptions = {
       }
     })
   ],
+  pages: {
+    signIn: '/auth/signin',
+  },
   // Store the token in the cookie
   callbacks: {
     async jwt({ token, user }) {

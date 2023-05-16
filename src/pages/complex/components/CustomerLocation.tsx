@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { TextField, Button, List, Dialog, DialogTitle, ListItem, ListItemText, ListItemButton } from '@mui/material';
+import React, { useEffect } from 'react';
+import { TextField, Button, List, Dialog, DialogTitle, ListItemText, ListItemButton } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { boolean } from 'yup';
-import { Controller, SubmitHandler, FormProvider, useForm, UseFormProps, UseFormReturn, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { OrderDTO } from '../default/orderData';
 
 type PropTypes = {
@@ -28,13 +26,13 @@ export function CustomerLocation(props: PropTypes) {
         form.setValue('customer_address', '');
       }
     }
-  }, [locations]);
+  }, [locations, customer, form]);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = (value: any) => {
+  const handleClose = () => {
     setOpen(false);
   };
 

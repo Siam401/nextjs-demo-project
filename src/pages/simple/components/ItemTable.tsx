@@ -21,10 +21,9 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
 } from '@mui/material';
 import axios from 'axios';
-import { setHead, setItemList, setItemForm, resetFormInput } from '@/features/simple/itemSlice'
+import { setItemList, setItemForm, resetFormInput } from '@/features/simple/itemSlice'
 
 const ItemTable = () => {
   const dispatch = useAppDispatch();
@@ -141,7 +140,7 @@ const ItemTable = () => {
                         variant="outlined"
                         startIcon={<EditIcon />}
                         sx={{ mr: 1 }}
-                        onClick={(e) => handleEditForm(item.id)}
+                        onClick={() => handleEditForm(item.id)}
                       >
                         Edit
                       </Button>
@@ -151,7 +150,7 @@ const ItemTable = () => {
                         variant="outlined"
                         color="error"
                         startIcon={<DeleteIcon />}
-                        onClick={(e) => handleClickOpen(item.id)}
+                        onClick={() => handleClickOpen(item.id)}
                       >
                         Delete
                       </Button>

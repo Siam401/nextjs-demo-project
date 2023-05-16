@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
+export const LOCAL_URL = process.env.NEXT_PUBLIC_SERVER_URL;
+
 import {
   BuyerDTO,
   CustomerDTO,

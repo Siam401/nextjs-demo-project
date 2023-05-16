@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
 import { yupResolver } from '@hookform/resolvers/yup';
-import jsonToFormData from '@ajoelp/json-to-formdata';
 
 //material-ui
-import PropTypes from 'prop-types';
-import { Box, Container, Grid, TextField, Button, ButtonGroup, FormControl, Select, MenuItem, Paper, FormHelperText, Dialog, DialogTitle, Link, Typography } from '@mui/material';
+import { Box, Container, Grid, TextField, Button, ButtonGroup, FormControl, Select, MenuItem, Paper, FormHelperText, Typography } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 
 //redux
@@ -20,18 +17,26 @@ import ItemSection from '@/pages/complex/components/FormItem';
 import { CustomerLocation } from '@/pages/complex/components/CustomerLocation';
 import orderValidate from '@/pages/complex/validation/orderValidate';
 import Head from 'next/head';
-import { Controller, SubmitHandler, FormProvider, useForm, UseFormProps, UseFormReturn, useFormContext, UseFieldArrayReturn, FieldArrayPath } from 'react-hook-form';
+import { Controller, FormProvider, useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
 import { OrderDTO, CustomerDTO, defaultOrderInput, BuyerDTO } from '@/pages/complex/default/orderData';
-import * as Yup from 'yup';
 import { orderActions } from '@/features/complex/orderSlice'
 import { fetchApiData } from '@/pages/complex/sync/DataLoad';
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import LoadingPage from '@/pages/components/LoadingPage';
 
 export default function OrderForm() {
   const dispatch = useAppDispatch()
   const router = useRouter();
   const orderId = Number(router.query.orderId)
+
+  const { status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      return router.push('/simple')
+    },
+  })
 
   const [customerId, setCustomerId] = useState(0);
   const [fileUrl, setFileUrl] = useState(null);
@@ -143,6 +148,10 @@ export default function OrderForm() {
     textAlign: 'center',
     color: theme.palette.text.secondary,
   }));
+
+  if (status === "loading") {
+    return <LoadingPage />
+  }
 
   return (
     <>

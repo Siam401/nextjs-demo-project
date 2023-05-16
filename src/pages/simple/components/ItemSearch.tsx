@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { setHead, setItemList } from '@/features/simple/itemSlice'
+import { setItemList } from '@/features/simple/itemSlice'
 
 const ItemSearch = () => {
   const searchField = useRef<HTMLInputElement>(null);

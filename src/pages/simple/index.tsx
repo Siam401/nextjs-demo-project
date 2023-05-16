@@ -7,8 +7,8 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Head from 'next/head';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/core/redux/store';
+import { useEffect } from 'react';
+import { useAppDispatch } from '@/core/redux/store';
 import { setHead, setItemList } from '@/features/simple/itemSlice'
 
 const Simple = () => {
@@ -17,7 +17,7 @@ const Simple = () => {
   useEffect(() => {
     fetchHeads()
     fetchItems()
-  }, [])
+  })
 
 
   const fetchHeads = async () => {
