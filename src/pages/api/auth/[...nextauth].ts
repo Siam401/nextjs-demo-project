@@ -2,7 +2,7 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const authOptions: NextAuthOptions = {
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
@@ -34,7 +34,7 @@ const authOptions: NextAuthOptions = {
 
         // If no error and we have user data, return it
         if (res.ok && user) {
-          return user
+          return { token: user.data.token } as any
         }
         // Return null if user data could not be retrieved
         return null
@@ -50,7 +50,7 @@ const authOptions: NextAuthOptions = {
       return { ...token, ...user }
     },
     async session({ session, token }) {
-      session.user = token as any;
+      session.user.token = token as any;
       return session
     }
   },

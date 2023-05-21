@@ -1,7 +1,7 @@
-import Typography from '@mui/material/Typography';
-import Toolbar from '@mui/material/Toolbar';
 import { LOCAL_URL } from '@/features/complex/orderSlice';
 import Button from '@mui/material/Button';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import { getSession, signIn, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
@@ -11,7 +11,7 @@ function TopBar() {
 
   async function getAuthToken() {
     const session = await getSession()
-    const token = session?.user.data.token
+    const token = session?.user.token
     console.log(token)
     return token
   }

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import itemDTO from '../default/itemData';
 // import { useDispatch, useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '@/core/redux/store';
@@ -10,12 +10,13 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
+import { resetFormInput, setItemForm, setItemList } from '@/features/simple/itemSlice';
 import {
   Dialog,
   DialogActions,
@@ -23,13 +24,13 @@ import {
   DialogContentText,
 } from '@mui/material';
 import axios from 'axios';
-import { setItemList, setItemForm, resetFormInput } from '@/features/simple/itemSlice'
 
-const ItemTable = () => {
+const ItemTable = (props: any) => {
+  console.log(props.items)
   const dispatch = useAppDispatch();
   const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
-  const [tableData, setTableData] = useState<itemDTO[]>([]);
+  // const [tableData, setTableData] = useState<itemDTO[]>([]);
   const [deleteItemId, setDeleteItemId] = useState(0);
   const [open, setOpen] = React.useState(false);
 
@@ -43,16 +44,18 @@ const ItemTable = () => {
   };
   // const [deleteItem, setDeleteItem] = useState<number>(0);
 
-  const items = useAppSelector((state) => state.item.items);
+  // const items = useAppSelector((state) => state.item.items);
+  const items = props.items.data
+  const tableData = props.items.data
 
   useEffect(() => {
-    setTableData(items);
+    // setTableData(items);
   }, [items]);
 
   const handleEditForm = async (id: number) => {
     console.log(id)
     if (id > 0) {
-      items.map((row) => {
+      items.map((row: any) => {
         if (row.id === id) {
           dispatch(setItemForm({
             name: row.name,

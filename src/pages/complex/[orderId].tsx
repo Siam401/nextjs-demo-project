@@ -1,42 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { styled } from '@mui/material/styles';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { styled } from '@mui/material/styles';
+import { useEffect, useState } from 'react';
 
 //material-ui
-import { Box, Container, Grid, TextField, Button, ButtonGroup, FormControl, Select, MenuItem, Paper, FormHelperText, Typography } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
+import { Box, Button, ButtonGroup, Container, FormControl, FormHelperText, Grid, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
 
 //redux
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { useAppDispatch, useAppSelector } from '@/core/redux/store';
+import { orderActions } from '@/features/complex/orderSlice';
+import MasterLayout from '@/layouts/MasterLayout';
+import { CustomerLocation } from '@/pages/complex/components/CustomerLocation';
+import ItemSection from '@/pages/complex/components/FormItem';
+import { BuyerDTO, CustomerDTO, OrderDTO, defaultOrderInput } from '@/pages/complex/default/orderData';
+import { fetchApiData } from '@/pages/complex/sync/DataLoad';
+import orderValidate from '@/pages/complex/validation/orderValidate';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
-import { useAppDispatch, useAppSelector } from '@/core/redux/store';
-import MasterLayout from '@/layouts/MasterLayout';
-import ItemSection from '@/pages/complex/components/FormItem';
-import { CustomerLocation } from '@/pages/complex/components/CustomerLocation';
-import orderValidate from '@/pages/complex/validation/orderValidate';
 import Head from 'next/head';
-import { Controller, FormProvider, useForm, UseFormProps, UseFormReturn } from 'react-hook-form';
-import { OrderDTO, CustomerDTO, defaultOrderInput, BuyerDTO } from '@/pages/complex/default/orderData';
-import { orderActions } from '@/features/complex/orderSlice'
-import { fetchApiData } from '@/pages/complex/sync/DataLoad';
-import Swal from 'sweetalert2'
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import LoadingPage from '@/pages/components/LoadingPage';
+import { Controller, FormProvider, UseFormProps, UseFormReturn, useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
 
 export default function OrderForm() {
   const dispatch = useAppDispatch()
   const router = useRouter();
   const orderId = Number(router.query.orderId)
-
-  const { status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      return router.push('/simple')
-    },
-  })
 
   const [customerId, setCustomerId] = useState(0);
   const [fileUrl, setFileUrl] = useState(null);
@@ -149,9 +140,6 @@ export default function OrderForm() {
     color: theme.palette.text.secondary,
   }));
 
-  if (status === "loading") {
-    return <LoadingPage />
-  }
 
   return (
     <>

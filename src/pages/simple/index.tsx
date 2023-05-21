@@ -1,3 +1,5 @@
+import { useAppDispatch } from '@/core/redux/store';
+import { setHead, setItemList } from '@/features/simple/itemSlice';
 import MasterLayout from '@/layouts/MasterLayout';
 import ItemForm from '@/pages/simple/components/ItemForm';
 import ItemSearch from '@/pages/simple/components/ItemSearch';
@@ -5,13 +7,11 @@ import ItemTable from '@/pages/simple/components/ItemTable';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import Head from 'next/head';
 import axios from 'axios';
+import Head from 'next/head';
 import { useEffect } from 'react';
-import { useAppDispatch } from '@/core/redux/store';
-import { setHead, setItemList } from '@/features/simple/itemSlice'
 
-const Simple = () => {
+const Simple = (props: any) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -47,7 +47,7 @@ const Simple = () => {
             <Grid item lg={7} xs={12} sx={{ p: 3 }}>
               <Paper elevation={1} sx={{ px: 3, py: 4 }}>
                 <ItemSearch />
-                <ItemTable />
+                <ItemTable items={props.items} />
               </Paper>
             </Grid>
           </Grid>
@@ -55,6 +55,17 @@ const Simple = () => {
       </MasterLayout>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  // const fetchItems = await axios.get(`http://auth-simple-complex-react-laravel.local/api/simple/items`).then(({ data }) => {
+  //   return data.data
+  // })
+  const fetchItems = await fetch(`http://auth-simple-complex-react-laravel.local/api/simple/items`)
+  const items = await fetchItems.json()
+
+  // console.log(data)
+  return { props: { items } };
 }
 
 export default Simple;

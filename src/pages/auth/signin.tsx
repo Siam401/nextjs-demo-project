@@ -50,11 +50,11 @@ const SignIn: NextPage = (props): JSX.Element => {
                   {error &&
                     <Fade
                       in={error}
-                      timeout={{ exit: 3000 }}
+                      timeout={1000}
                       addEndListener={() => {
                         setTimeout(() => {
                           setError(false)
-                        }, 2000);
+                        }, 4000);
                       }}
                     >
                       <Alert variant="outlined" severity="error">

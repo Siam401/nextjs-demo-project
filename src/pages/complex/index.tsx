@@ -1,30 +1,22 @@
 
 import { styled } from '@mui/material/styles';
 //material-ui
-import { Box, Container, TableContainer, Paper, TextField, Button, Table, TableBody, TableCell, TableHead, TableRow, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import OrderFilter from '@/pages/complex/components/OrderFilter';
 import OrderList from '@/pages/complex/components/OrderList';
+import { Box, Button, Container, Paper } from '@mui/material';
 import { useRouter } from 'next/router';
 //redux
-import { orderActions } from '@/features/complex/orderSlice'
+import { orderActions } from '@/features/complex/orderSlice';
 // import { useDispatch, useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '@/core/redux/store';
-import { useEffect, useState } from 'react';
 import MasterLayout from '@/layouts/MasterLayout';
-import Head from 'next/head';
 import { fetchApiData } from '@/pages/complex/sync/DataLoad';
-import { useSession } from 'next-auth/react';
-import LoadingPage from '@/pages/components/LoadingPage';
+import Head from 'next/head';
+import { useEffect } from 'react';
 
 export default function List() {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const { status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push('/simple')
-    },
-  })
   const customers = useAppSelector((state) => state.order.customers)
   const buyers = useAppSelector((state) => state.order.buyers)
   const orders = useAppSelector((state) => state.order.orders)
@@ -47,9 +39,6 @@ export default function List() {
     color: theme.palette.text.secondary,
   }));
 
-  if (status === "loading") {
-    return <LoadingPage />
-  }
 
   return (
     <>
